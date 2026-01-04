@@ -198,33 +198,41 @@ const Header = ({ isLoggedIn = false, onSearch = () => {} }) => {
                 </div>
                 
                 {/* Enhanced Search Suggestions */}
-                {suggestionsOpen && suggestions.length > 0 && (
+                {suggestionsOpen && (
                   <div className="absolute top-full mt-2 left-0 right-0 bg-white border border-border rounded-2xl shadow-xl z-50 overflow-hidden">
                     <div className="p-4 border-b border-border">
                       <h4 className="text-sm font-semibold text-foreground">Search Results</h4>
                     </div>
-                    {suggestions.map(item => (
-                      <button
-                        key={item.id}
-                        onClick={() => navigate(`/product-detail-page?id=${item.id}`)}
-                        className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 text-left transition-colors duration-200"
-                      >
-                        <img src={item.image || '/assets/images/no_image.png'} alt={item.name} className="w-12 h-12 object-cover rounded-lg" />
-                        <div className="flex-1">
-                          <div className="font-medium text-foreground line-clamp-1">{item.name}</div>
-                          <div className="text-sm text-primary font-semibold">₹{(item.price || 0).toFixed(2)}</div>
+                    {suggestions.length > 0 ? (
+                      <>
+                        {suggestions.map(item => (
+                          <button
+                            key={item.id}
+                            onClick={() => navigate(`/product-detail-page?id=${item.id}`)}
+                            className="w-full flex items-center gap-4 p-4 hover:bg-muted/50 text-left transition-colors duration-200"
+                          >
+                            <img src={item.image || '/assets/images/no_image.png'} alt={item.name} className="w-12 h-12 object-cover rounded-lg" />
+                            <div className="flex-1">
+                              <div className="font-medium text-foreground line-clamp-1">{item.name}</div>
+                              <div className="text-sm text-primary font-semibold">₹{(item.price || 0).toFixed(2)}</div>
+                            </div>
+                            <Icon name="ArrowRight" size={16} className="text-muted-foreground" />
+                          </button>
+                        ))}
+                        <div className="border-t border-border p-4">
+                          <button
+                            onClick={handleSearch}
+                            className="w-full text-center py-2 text-primary font-medium hover:bg-primary/5 rounded-lg transition-colors duration-200"
+                          >
+                            View all results for "{searchQuery}"
+                          </button>
                         </div>
-                        <Icon name="ArrowRight" size={16} className="text-muted-foreground" />
-                      </button>
-                    ))}
-                    <div className="border-t border-border p-4">
-                      <button
-                        onClick={handleSearch}
-                        className="w-full text-center py-2 text-primary font-medium hover:bg-primary/5 rounded-lg transition-colors duration-200"
-                      >
-                        View all results for "{searchQuery}"
-                      </button>
-                    </div>
+                      </>
+                    ) : (
+                      <div className="p-4 text-center text-muted-foreground text-sm">
+                        No results found
+                      </div>
+                    )}
                   </div>
                 )}
               </form>

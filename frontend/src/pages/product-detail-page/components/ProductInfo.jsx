@@ -94,197 +94,198 @@ const ProductInfo = ({ product, onAddToCart, onAddToWishlist, isInWishlist }) =>
   const allVariants = product?.variants?.length > 0 ? product.variants : [initialVariant];
 
   return (
-    <div className="space-y-6">
-      {/* Product Title */}
-      <div>
-        <h1 className="font-heading font-bold text-2xl lg:text-3xl text-foreground mb-2">
-          {product?.name}
-        </h1>
-        <p className="font-body text-muted-foreground">
-          {product?.shortDescription}
-        </p>
-      </div>
+    <div>
+      <div className="space-y-6">
+        {/* Product Info */}
+        <div>
+          <h1 className="font-heading font-bold text-2xl lg:text-3xl text-foreground mb-2">
+            {product?.name}
+          </h1>
+          <p className="font-body text-muted-foreground">
+            {product?.shortDescription}
+          </p>
 
-      {/* Stock Status */}
-      <div className="flex items-center gap-2">
-        <div className={`w-2 h-2 rounded-full ${inStock ? 'bg-success' : 'bg-destructive'}`}></div>
-        <span className={`text-sm font-medium ${inStock ? 'text-success' : 'text-destructive'}`}>
-          {inStock ? `In Stock (${availableStock} units available)` : 'Out of Stock'}
-        </span>
-      </div>
-      {/* Product Badges */}
-      <div className="flex flex-wrap gap-2">
-        {product?.badges?.map((badge, index) => (
-          <span
-            key={index}
-            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-caption font-medium bg-accent/10 text-accent border border-accent/20"
-          >
-            {badge}
+        {/* Stock Status */}
+        <div className="flex items-center gap-2">
+          <div className={`w-2 h-2 rounded-full ${inStock ? 'bg-success' : 'bg-destructive'}`}></div>
+          <span className={`text-sm font-medium ${inStock ? 'text-success' : 'text-destructive'}`}>
+            {inStock ? `In Stock (${availableStock} units available)` : 'Out of Stock'}
           </span>
-        ))}
-      </div>
-      {/* Pricing - Dynamic based on selected variant */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-3">
-          <span className="font-heading font-bold text-2xl text-foreground">
-            ₹{selectedVariant?.price?.toFixed(2)}
-          </span>
-          {selectedVariant?.originalPrice && selectedVariant?.originalPrice > selectedVariant?.price && (
-            <>
-              <span className="font-data text-lg text-muted-foreground line-through">
-                ₹{selectedVariant?.originalPrice?.toFixed(2)}
-              </span>
-              {discountPercentage > 0 && (
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-caption font-medium bg-success/10 text-success">
-                  Save {discountPercentage}%
-                </span>
-              )}
-            </>
-          )}
         </div>
-        <p className="font-caption text-sm text-muted-foreground">
-          Inclusive of all taxes
-        </p>
-      </div>
-
-      {/* Variant Selection - Card-based UI matching reference design */}
-      <div>
-        <label className="block font-body font-semibold text-foreground mb-3">
-          Select Weight
-        </label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {allVariants.map((variant) => {
-            const isSelected = selectedVariant?.id === variant?.id;
-            const variantStock = variant?.stock ?? variant?.stockQuantity ?? 0;
-            const variantAvailable = variantStock > 0;
-            const discount = computeDiscount(variant);
-            const per100Label = computePer100Label(variant);
-
-            return (
-              <button
-                key={variant?.id}
-                onClick={() => variantAvailable && handleVariantChange(variant)}
-                disabled={!variantAvailable}
-                className={`p-3 rounded-xl border-2 transition-all duration-200 text-left ${
-                  isSelected
-                    ? 'border-primary bg-primary/5 shadow-md'
-                    : variantAvailable
-                      ? 'border-border hover:border-primary/50 bg-background hover:bg-muted/30'
-                      : 'border-border bg-muted/50 opacity-50 cursor-not-allowed'
-                }`}
-              >
-                {/* Weight Label */}
-                <div className="font-heading font-bold text-foreground mb-2">
-                  {variant?.weight || `${variant?.weightValue}${variant?.weightUnit || 'g'}`}
-                </div>
-
-                {/* Pricing Info */}
-                <div className="space-y-1 text-sm">
-                  {/* Sale Price */}
-                  <div className="flex items-center gap-2">
-                    <span className="font-heading font-semibold text-foreground">
-                      ₹{variant?.price?.toFixed(0)}
-                    </span>
-                    {variant?.originalPrice && variant?.originalPrice > variant?.price && (
-                      <span className="text-muted-foreground line-through text-xs">
-                        ₹{variant?.originalPrice?.toFixed(0)}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Discount Badge */}
-                  {discount > 0 && (
-                    <div className="text-xs font-caption font-medium text-success">
-                      {discount}% OFF
-                    </div>
-                  )}
-
-                  {/* Per 100g Price */}
-                  {per100Label !== 'N/A' && (
-                    <div className="text-xs text-muted-foreground">
-                      {per100Label}
-                    </div>
-                  )}
-
-                  {/* Stock Status */}
-                  <div className={`text-xs font-caption ${
-                    variantAvailable ? 'text-success' : 'text-destructive'
-                  }`}>
-                    {variantAvailable ? `${variantStock} in stock` : 'Out of stock'}
-                  </div>
-                </div>
-
-                {/* Selection Indicator */}
-                {isSelected && (
-                  <div className="mt-2 flex items-center justify-center w-5 h-5 rounded-full bg-primary text-primary-foreground">
-                    <Icon name="Check" size={14} />
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-      {/* Quantity and Add to Cart */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-4">
-          <span className="font-body font-medium text-foreground">Quantity:</span>
-          <div className="flex items-center border border-border rounded-lg">
-            <button
-              onClick={() => handleQuantityChange(-1)}
-              disabled={quantity <= 1}
-              className="w-10 h-10 flex items-center justify-center hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+        {/* Product Badges */}
+        <div className="flex flex-wrap gap-2">
+          {product?.badges?.map((badge, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-caption font-medium bg-accent/10 text-accent border border-accent/20"
             >
-              <Icon name="Minus" size={16} />
-            </button>
-            <span className="w-12 text-center font-data font-medium">
-              {quantity}
+              {badge}
             </span>
-            <button
-              onClick={() => handleQuantityChange(1)}
-              disabled={quantity >= availableStock}
-              className="w-10 h-10 flex items-center justify-center hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-            >
-              <Icon name="Plus" size={16} />
-            </button>
+          ))}
+        </div>
+        {/* Pricing - Dynamic based on selected variant */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <span className="font-heading font-bold text-2xl text-foreground">
+              ₹{selectedVariant?.price?.toFixed(2)}
+            </span>
+            {selectedVariant?.originalPrice && selectedVariant?.originalPrice > selectedVariant?.price && (
+              <>
+                <span className="font-data text-lg text-muted-foreground line-through">
+                  ₹{selectedVariant?.originalPrice?.toFixed(2)}
+                </span>
+                {discountPercentage > 0 && (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-caption font-medium bg-success/10 text-success">
+                    Save {discountPercentage}%
+                  </span>
+                )}
+              </>
+            )}
+          </div>
+          <p className="font-caption text-sm text-muted-foreground">
+            Inclusive of all taxes
+          </p>
+        </div>
+
+        {/* Variant Selection - Card-based UI matching reference design */}
+        <div>
+          <label className="block font-body font-semibold text-foreground mb-3">
+            Select Weight
+          </label>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {allVariants.map((variant) => {
+              const isSelected = selectedVariant?.id === variant?.id;
+              const variantStock = variant?.stock ?? variant?.stockQuantity ?? 0;
+              const variantAvailable = variantStock > 0;
+              const discount = computeDiscount(variant);
+              const per100Label = computePer100Label(variant);
+
+              return (
+                <button
+                  key={variant?.id}
+                  onClick={() => variantAvailable && handleVariantChange(variant)}
+                  disabled={!variantAvailable}
+                  className={`p-3 rounded-xl border-2 transition-all duration-200 text-left ${
+                    isSelected
+                      ? 'border-primary bg-primary/5 shadow-md'
+                      : variantAvailable
+                        ? 'border-border hover:border-primary/50 bg-background hover:bg-muted/30'
+                        : 'border-border bg-muted/50 opacity-50 cursor-not-allowed'
+                  }`}
+                >
+                  {/* Weight Label */}
+                  <div className="font-heading font-bold text-foreground mb-2">
+                    {variant?.weight || `${variant?.weightValue}${variant?.weightUnit || 'g'}`}
+                  </div>
+
+                  {/* Pricing Info */}
+                  <div className="space-y-1 text-sm">
+                    {/* Sale Price */}
+                    <div className="flex items-center gap-2">
+                      <span className="font-heading font-semibold text-foreground">
+                        ₹{variant?.price?.toFixed(0)}
+                      </span>
+                      {variant?.originalPrice && variant?.originalPrice > variant?.price && (
+                        <span className="text-muted-foreground line-through text-xs">
+                          ₹{variant?.originalPrice?.toFixed(0)}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Discount Badge */}
+                    {discount > 0 && (
+                      <div className="text-xs font-caption font-medium text-success">
+                        {discount}% OFF
+                      </div>
+                    )}
+
+                    {/* Per 100g Price */}
+                    {per100Label !== 'N/A' && (
+                      <div className="text-xs text-muted-foreground">
+                        {per100Label}
+                      </div>
+                    )}
+
+                    {/* Stock Status */}
+                    <div className={`text-xs font-caption ${
+                      variantAvailable ? 'text-success' : 'text-destructive'
+                    }`}>
+                      {variantAvailable ? `${variantStock} in stock` : 'Out of stock'}
+                    </div>
+                  </div>
+
+                  {/* Selection Indicator */}
+                  {isSelected && (
+                    <div className="mt-2 flex items-center justify-center w-5 h-5 rounded-full bg-primary text-primary-foreground">
+                      <Icon name="Check" size={14} />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
+        {/* Quantity and Add to Cart */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-4">
+            <span className="font-body font-medium text-foreground">Quantity:</span>
+            <div className="flex items-center border border-border rounded-lg">
+              <button
+                onClick={() => handleQuantityChange(-1)}
+                disabled={quantity <= 1}
+                className="w-10 h-10 flex items-center justify-center hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              >
+                <Icon name="Minus" size={16} />
+              </button>
+              <span className="w-12 text-center font-data font-medium">
+                {quantity}
+              </span>
+              <button
+                onClick={() => handleQuantityChange(1)}
+                disabled={quantity >= availableStock}
+                className="w-10 h-10 flex items-center justify-center hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              >
+                <Icon name="Plus" size={16} />
+              </button>
+            </div>
+          </div>
 
-        <div className="flex gap-3">
-          <Button
-            variant="default"
-            onClick={handleAddToCart}
-            iconName="ShoppingCart"
-            iconPosition="left"
-            className="flex-1"
-            disabled={!inStock}
-          >
-            Add to Cart
-          </Button>
-          <Button
-            variant="outline"
-            onClick={onAddToWishlist}
-            iconName={isInWishlist ? "Heart" : "Heart"}
-            size="icon"
-            className={isInWishlist ? "text-destructive" : ""}
-          >
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              variant="default"
+              onClick={handleAddToCart}
+              iconName="ShoppingCart"
+              iconPosition="left"
+              className="flex-1"
+              disabled={!inStock}
+            >
+              Add to Cart
+            </Button>
+            <Button
+              variant="outline"
+              onClick={onAddToWishlist}
+              iconName={isInWishlist ? "Heart" : "Heart"}
+              size="icon"
+              className={isInWishlist ? "text-destructive" : ""}
+            >
+            </Button>
+          </div>
+        </div>
+        {/* Stock Status */}
+        <div className="flex items-center gap-2">
+          <div className={`w-2 h-2 rounded-full ${inStock ? 'bg-success' : 'bg-destructive'}`}></div>
+          {inStock ? (
+            <span className="font-caption text-sm text-success font-medium">
+              In Stock ({availableStock} units available)
+            </span>
+          ) : (
+            <span className="font-caption text-sm text-destructive font-medium">
+              Out of Stock
+            </span>
+          )}
         </div>
       </div>
-      {/* Stock Status */}
-      <div className="flex items-center gap-2">
-        <div className={`w-2 h-2 rounded-full ${inStock ? 'bg-success' : 'bg-destructive'}`}></div>
-        {inStock ? (
-          <span className="font-caption text-sm text-success font-medium">
-            In Stock ({availableStock} units available)
-          </span>
-        ) : (
-          <span className="font-caption text-sm text-destructive font-medium">
-            Out of Stock
-          </span>
-        )}
-      </div>
-      {/* Oil Essentials sticker for Wood Pressed Oils and Essential Oils */}
+      {/* Oil Essentials sticker for Wood Pressed Oils and Essential Oils - moved above tabs */}
       {(function() {
         const cat = (product?.category || '').toString().toLowerCase().trim();
         const subcat = (product?.subcategory || '').toString().toLowerCase().trim();
@@ -296,12 +297,12 @@ const ProductInfo = ({ product, onAddToCart, onAddToWishlist, isInWishlist }) =>
           names.some(n => cat === n || subcat === n)
         ) {
           return (
-            <div className="w-full mt-8 mb-4">
+            <div className="w-full mt-8 mb-4" style={{width:'100%',background:'#FFF8E1',overflow:'visible',margin:'0 auto'}}>
               <img
                 src="/assets/images/esential%20oils/oilessentials.jpeg"
                 alt="Oils Essentials Sticker"
                 className="w-full h-auto object-cover rounded"
-                style={{ display: 'block' }}
+                style={{width:'100%',maxWidth:'100%',display:'block',margin:'0 auto'}}
               />
             </div>
           );
@@ -309,6 +310,7 @@ const ProductInfo = ({ product, onAddToCart, onAddToWishlist, isInWishlist }) =>
         return null;
       })()}
     </div>
+  </div>
   );
 };
 

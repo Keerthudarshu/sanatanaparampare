@@ -46,16 +46,27 @@ const Homepage = () => {
   }, []);
 
   const handleAddToCart = (product) => {
+    // If product has a selectedVariantId, use that variant
+    let variant = null;
+    if (product.selectedVariantId && product.variants) {
+      variant = product.variants.find(v => v.id === product.selectedVariantId);
+    } else if (product.variants && product.variants.length > 0) {
+      variant = product.variants[0];
+    }
     const cartItem = {
-      id: `${product.id}-default`,
+      id: variant ? `${product.id}-${variant.id}` : `${product.id}-default`,
       productId: product.id,
       name: product.name,
-      price: product.salePrice || product.price,
-      originalPrice: product.originalPrice || product.price,
+      price: variant ? variant.price : (product.salePrice || product.price),
+      originalPrice: variant ? variant.originalPrice : (product.originalPrice || product.price),
       image: product.image,
-      variant: 'Default',
+      variant: variant ? (variant.label || variant.weightValue + (variant.weightUnit || '')) : 'Default',
       category: product.category,
-      brand: product.brand
+      brand: product.brand,
+      variantId: variant ? variant.id : undefined,
+      weightValue: variant ? variant.weightValue : undefined,
+      weightUnit: variant ? variant.weightUnit : undefined,
+      stockQuantity: variant ? variant.stockQuantity : product.stockQuantity
     };
     addToCart(cartItem, 1);
     console.log('Added to cart:', cartItem);

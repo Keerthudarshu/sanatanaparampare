@@ -55,23 +55,30 @@ const ProductCollectionGrid = () => {
     const loadProducts = async () => {
       try {
         setLoading(true);
-        
-        // Always load ALL products first for proper filtering
         let allProducts = [];
-        try {
-          console.log('Fetching all products from public API...');
-          allProducts = await productApi.getAll(); // Get all products without filters
-          console.log('Successfully loaded all products:', allProducts.length);
-        } catch (e) {
-          console.warn('Public API failed, falling back to local data:', e?.message);
-          // Fallback to hardcoded data from dataService
-          const response = await dataService.getProducts();
-          allProducts = response?.data || [];
-          console.log('Loaded products from fallback data:', allProducts.length);
+        let normalizedProducts = [];
+        let searchParamRaw = searchParams.get('search') || '';
+        if (searchParamRaw) {
+          // Try direct API search if available
+          try {
+            allProducts = await productApi.search(searchParamRaw);
+            console.log('API search returned:', allProducts.length);
+          } catch (e) {
+            console.warn('API search failed, falling back to getAll:', e?.message);
+            allProducts = await productApi.getAll();
+          }
+        } else {
+          try {
+            allProducts = await productApi.getAll();
+          } catch (e) {
+            console.warn('Public API failed, falling back to local data:', e?.message);
+            const response = await dataService.getProducts();
+            allProducts = response?.data || [];
+          }
         }
 
         // Normalize backend products to UI shape
-        const normalizedProducts = allProducts.map((p) => {
+        normalizedProducts = allProducts.map((p) => {
           const variants = Array.isArray(p?.variants) ? p.variants : [];
           const firstVariant = variants[0];
           const formatVariantWeight = (variant) => {
@@ -80,7 +87,6 @@ const ProductCollectionGrid = () => {
             if (variant.weightValue) return `${variant.weightValue}${variant.weightUnit || ''}`;
             return null;
           };
-
           return {
             id: p?.id,
             name: p?.name || p?.title,
@@ -96,132 +102,25 @@ const ProductCollectionGrid = () => {
             bestseller: Boolean(p?.bestseller),
             image: resolveImageUrl(p?.imageUrl),
             description: p?.description || '',
-            // Include stock fields when present; treat missing as unlimited
             stockQuantity: p?.stockQuantity ?? null,
-            inStock: p?.inStock !== false, // Default to true if not specified
+            inStock: p?.inStock !== false,
             weight: formatVariantWeight(firstVariant) || 'N/A',
             variants
           };
         });
 
-        console.log('Normalized products:', normalizedProducts.length);
-        console.log('Sample products with categories:', normalizedProducts.slice(0, 5).map(p => ({
-          name: p.name,
-          category: p.category
-        })));
-        
-        // Store all products for sidebar filtering
         setProducts(normalizedProducts);
-        // Attempt to load categories so we can map slug/id -> canonical category
-        let categoriesData = [];
-        try {
-          const catResp = await categoryApi.getAll();
-          categoriesData = catResp?.data || catResp || [];
-          console.log('Loaded categories for mapping:', categoriesData);
-        } catch (e) {
-          console.warn('Failed to load categories for mapping, continuing without:', e?.message);
-        }
-
-        // Apply URL-based filters for initial display
-        const categoryParam = searchParams.get('category') || '';
-        const searchParamRaw = searchParams.get('search') || '';
-        
-        let initialFiltered = normalizedProducts;
-        
-        if (categoryParam) {
-          console.log('Applying initial category filter:', categoryParam);
-
-          // helper to slugify/normalize strings for permissive matching
-          const slug = (s) => String(s || '').toLowerCase().trim().replace(/\s+/g, '-');
-
-          // Detect a matching category object from categoriesData (if available)
-          let matchedCategory = null;
-          if (Array.isArray(categoriesData) && categoriesData.length > 0) {
-            // categoriesData may be primitive array like ["ghee"] or objects [{id, name}]
-            matchedCategory = categoriesData.find(cat => {
-              if (cat == null) return false;
-              if (typeof cat === 'string' || typeof cat === 'number') {
-                return slug(String(cat)) === slug(categoryParam);
-              }
-              // object
-              const name = cat?.name || cat?.label || '';
-              const id = cat?.id != null ? String(cat.id) : '';
-              return slug(name) === slug(categoryParam) || slug(id) === slug(categoryParam) || slug(String(cat)) === slug(categoryParam);
-            }) || null;
-          }
-
-          const filterByMatch = (product) => {
-            const pc = product?.category;
-            // if product.category is an object, try its id/name
-            const candidates = [];
-            if (pc != null) {
-              if (typeof pc === 'object') {
-                if (pc?.id != null) candidates.push(String(pc.id));
-                if (pc?.name) candidates.push(String(pc.name));
-              } else {
-                candidates.push(String(pc));
-              }
-            }
-            // also consider categoryId field populated earlier
-            if (product?.categoryId != null) candidates.push(String(product.categoryId));
-            if (product?.categoryName) candidates.push(String(product.categoryName));
-
-            // compare against matchedCategory id/name if found, else compare against param
-            if (matchedCategory) {
-              const targetId = matchedCategory?.id != null ? String(matchedCategory.id) : null;
-              const targetName = matchedCategory?.name || matchedCategory || null;
-              return candidates.some(c => slug(c) === slug(targetId) || slug(c) === slug(targetName) || slug(c) === slug(categoryParam));
-            }
-
-            // fallback: permissive string matching between product candidates and categoryParam
-            return candidates.some(c => {
-              const a = slug(c);
-              const b = slug(categoryParam);
-              return a === b || a.includes(b) || b.includes(a);
-            });
-          };
-
-          initialFiltered = normalizedProducts.filter(product => filterByMatch(product));
-          console.log('Products after category filter:', initialFiltered.length);
-
-          // If we matched an API category, prefer using its id for sidebar selection; otherwise use the param
-          const sidebarCategoryValue = matchedCategory && matchedCategory.id != null ? String(matchedCategory.id) : categoryParam;
-          setFilters(prev => ({
-            ...prev,
-            categories: prev?.categories?.includes(sidebarCategoryValue) ? prev.categories : [...(prev?.categories || []), sidebarCategoryValue]
-          }));
-        }
-        
-        if (searchParamRaw) {
-          const searchParam = searchParamRaw.toLowerCase();
-          initialFiltered = initialFiltered.filter(p => 
-            String(p?.name || '').toLowerCase().includes(searchParam) ||
-            String(p?.description || '').toLowerCase().includes(searchParam) ||
-            String(p?.category || '').toLowerCase().includes(searchParam)
-          );
-          console.log('Products after search filter:', initialFiltered.length);
-        }
-        // Also set the filters state so the sidebar checkboxes reflect the active category
-        if (categoryParam) {
-          setFilters(prev => ({
-            ...prev,
-            categories: prev?.categories?.includes(categoryParam) ? prev.categories : [...(prev?.categories || []), categoryParam]
-          }));
-        }
-
-        setFilteredProducts(initialFiltered);
+        setFilteredProducts(normalizedProducts);
       } catch (error) {
         console.error('Error loading products:', error);
-        // Set empty array as fallback
         setProducts([]);
         setFilteredProducts([]);
       } finally {
         setLoading(false);
       }
     };
-
     loadProducts();
-  }, [location.search]); // Depend on location.search for category filtering
+  }, [location.search]);
 
   // Filter and sort products
   useEffect(() => {

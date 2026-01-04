@@ -294,14 +294,8 @@ const CheckoutProcess = () => {
         const savedOrder = await checkoutApi.placeOrder(user.email);
         console.log('Order placed successfully:', savedOrder);
 
-        let reviewData = orderReviewData;
-        if (!reviewData) {
-          try { reviewData = await checkoutApi.review(user.email); } catch (reviewError) { console.warn('Could not fetch review data for WhatsApp:', reviewError); }
-        }
-
-        await sendOrderToWhatsApp(savedOrder, reviewData, user, currentLocation);
         clearCart();
-        alert(`Order placed successfully! Order ID: ${savedOrder.id}. Order details have been sent to WhatsApp.`);
+        alert(`Order placed successfully! Order ID: ${savedOrder.id}.`);
         navigate('/user-account-dashboard?section=orders');
         setIsProcessing(false);
         return;
@@ -346,12 +340,6 @@ const CheckoutProcess = () => {
             const verifyResult = await checkoutApi.verifyRazorpayPayment(payload);
             const savedOrder = verifyResult?.order || verifyResult;
 
-            // Clear cart, send WhatsApp and redirect
-            let reviewData = orderReviewData;
-            if (!reviewData) {
-              try { reviewData = await checkoutApi.review(user.email); } catch (reviewError) { /* ignore */ }
-            }
-            await sendOrderToWhatsApp(savedOrder, reviewData, user, currentLocation);
             clearCart();
             setPopup({ open: true, message: `Payment successful and order placed! Order ID: ${savedOrder.id || 'N/A'}`, type: 'success' });
             setTimeout(() => {

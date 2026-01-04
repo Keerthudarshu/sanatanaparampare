@@ -1,3 +1,4 @@
+import '../../styles/oil-essentials-sticker.css';
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
 import { useCart } from '../../contexts/CartContext';
@@ -398,6 +399,15 @@ const ProductDetailPage = () => {
           </div>
         </div>
 
+       {/* / Oil Essentials Sticker (single, end-to-end, below product section)
+        <div style={{width:'100%',background:'#FFF8E1',overflow:'visible',margin:'0 auto'}}>
+          <img
+            src="/assets/images/esential oils/oilessentials.jpeg"
+            alt="Oil Essentials Sticker"
+            className="oil-essentials-sticker"
+            style={{width:'100%',maxWidth:'100%',display:'block',margin:'0 auto'}}
+          />
+        </div> */}
         {/* Product Details */}
         <div className="mb-12">
           <ProductDetails product={product} />
