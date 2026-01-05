@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminSidebar from './components/AdminSidebar';
 import AdminHeader from './components/AdminHeader';
 import ProductManagement from './components/ProductManagement';
+import UpdateProductImage from './components/UpdateProductImage';
 import UserManagement from './components/UserManagement';
 import OrderManagement from './components/OrderManagement';
 import Dashboard from './components/Dashboard';
@@ -50,6 +51,8 @@ const AdminPanel = () => {
         return <Dashboard />;
       case 'products':
         return <ProductManagement />;
+      case 'update-product-image':
+        return <UpdateProductImage />;
       case 'users':
         return <UserManagement />;
       case 'orders':

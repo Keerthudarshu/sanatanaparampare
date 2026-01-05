@@ -28,9 +28,6 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
   useEffect(() => {
     if (product && typeof product === 'object') {
-      console.log('ProductForm: Loading product for edit:', product);
-      console.log('ProductForm: Product variants:', product.variants);
-      
       // Convert single-price product to variants, or use existing variants
       const incomingVariants = (product.variants && Array.isArray(product.variants) && product.variants.length > 0)
         ? product.variants.map(v => ({
@@ -50,8 +47,6 @@ const ProductForm = ({ product, onSave, onCancel }) => {
             }
           ];
 
-      console.log('ProductForm: Mapped variants for form:', incomingVariants);
-
       setFormData({
         name: product.name || '',
         description: product.description || '',
@@ -62,9 +57,8 @@ const ProductForm = ({ product, onSave, onCancel }) => {
         benefits: product.benefits || '',
         inStock: typeof product.inStock === 'boolean' ? product.inStock : true
       });
-      // Keep the original image URL for preview/preserve during update
-      const original = product.imageUrl || product.image || product.thumbnailUrl;
-      setExistingImageUrl(resolveImageUrl(original || ''));
+      // Do not set or show any image for edit mode
+      setExistingImageUrl('');
     } else {
       setFormData({
         name: '',
@@ -421,40 +415,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">
-              Product Image
-            </label>
-            <div className="space-y-2">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-              />
-              {/* Show selected image preview; else show existing image when editing */}
-              {imageFile ? (
-                <div className="mt-2">
-                  <img
-                    src={URL.createObjectURL(imageFile)}
-                    alt="Preview"
-                    className="w-20 h-20 object-cover rounded-md border"
-                  />
-                </div>
-              ) : (
-                product && existingImageUrl && (
-                  <div className="mt-2">
-                    <img
-                      src={existingImageUrl}
-                      alt="Current product image"
-                      className="w-20 h-20 object-cover rounded-md border"
-                      onError={(e) => { e.currentTarget.src = '/assets/images/no_image.png'; }}
-                    />
-                  </div>
-                )
-              )}
-            </div>
-          </div>
+          {/* Product image upload removed. Use the Update Product Image section for image management. */}
 
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">

@@ -1,4 +1,4 @@
-package com.eduprajna.Controller;
+package com.eduprajna.controller;
 
 import com.eduprajna.dto.PasswordUpdateRequest;
 import com.eduprajna.dto.ProfileDTO;

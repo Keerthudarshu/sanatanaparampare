@@ -1,4 +1,4 @@
-package com.eduprajna.Controller;
+package com.eduprajna.controller;
 
 import com.eduprajna.service.PasswordResetService;
 import org.springframework.beans.factory.annotation.Autowired;

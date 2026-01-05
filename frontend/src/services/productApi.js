@@ -1,6 +1,23 @@
 import apiClient from './api';
 
 const productApi = {
+  // Remove product image (standard RESTful)
+  async removeImage(productId) {
+    if (!productId) throw new Error('Product ID required');
+    const res = await apiClient.delete(`/admin/products/${productId}/image`);
+    return res.data;
+  },
+
+  // Upload new product image (standard RESTful, expects form-data)
+  async uploadImage(productId, file) {
+    if (!productId || !file) throw new Error('Product ID and file required');
+    const formData = new FormData();
+    formData.append('image', file);
+    const res = await apiClient.post(`/admin/products/${productId}/image`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return res.data;
+  },
   async getAll(params = {}) {
     try {
       console.log('ProductAPI: Fetching all products with params:', params);

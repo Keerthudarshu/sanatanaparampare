@@ -1,4 +1,4 @@
-package com.eduprajna.Controller;
+package com.eduprajna.controller;
 
 import java.io.IOException;
 

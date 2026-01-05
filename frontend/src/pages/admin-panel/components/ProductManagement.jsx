@@ -6,9 +6,13 @@ import apiClient from '../../../services/api';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import ProductForm from './ProductForm';
+import { useRef } from 'react';
 import { resolveImageUrl } from '../../../lib/resolveImageUrl';
 
 const ProductManagement = () => {
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [imageProduct, setImageProduct] = useState(null);
+  const fileInputRef = useRef();
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -112,9 +116,30 @@ const ProductManagement = () => {
     setShowProductForm(true);
   };
 
+
   const handleEditProduct = (product) => {
     setEditingProduct(product);
     setShowProductForm(true);
+  };
+
+  const handleEditImages = (product) => {
+    setImageProduct(product);
+    setShowImageModal(true);
+  };
+
+  const handleRemoveImage = async (imgUrl) => {
+    // Implement API call to remove image from product
+    // For now, just log
+    console.log('Remove image:', imgUrl, 'from product:', imageProduct.id);
+    // TODO: Call backend to remove image, then reload product images
+  };
+
+  const handleAddImages = async (e) => {
+    const files = e.target.files;
+    if (!files || !files.length) return;
+    // Implement API call to upload new images
+    console.log('Add images:', files, 'to product:', imageProduct.id);
+    // TODO: Call backend to upload images, then reload product images
   };
 
   const handleDeleteProduct = async (productId) => {
@@ -244,6 +269,13 @@ const ProductManagement = () => {
                   <Edit size={16} className="text-primary" />
                 </button>
                 <button
+                  onClick={() => handleEditImages(product)}
+                  className="p-2 bg-card/80 backdrop-blur-sm rounded-full hover:bg-card transition-colors"
+                  title="Edit Images"
+                >
+                  <span role="img" aria-label="Edit Images">🖼️</span>
+                </button>
+                <button
                   onClick={() => handleDeleteProduct(product.id)}
                   disabled={loading}
                   className="p-2 bg-card/80 backdrop-blur-sm rounded-full hover:bg-card transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -258,6 +290,34 @@ const ProductManagement = () => {
               </h3>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
+                        {/* Product Images Modal */}
+                        {showImageModal && imageProduct && (
+                          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+                              <button className="absolute top-2 right-2 text-xl" onClick={() => setShowImageModal(false)}>&times;</button>
+                              <h2 className="text-lg font-bold mb-4">Edit Product Images</h2>
+                              <div className="space-y-2 mb-4">
+                                {/* Show current images if any */}
+                                {Array.isArray(imageProduct.images) && imageProduct.images.length > 0 ? (
+                                  imageProduct.images.map((img, idx) => (
+                                    <div key={idx} className="flex items-center gap-2">
+                                      <img src={img} alt="Product" className="w-16 h-16 object-cover rounded border" />
+                                      <button onClick={() => handleRemoveImage(img)} className="text-destructive text-xs">Remove</button>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <div className="text-muted-foreground text-sm">No images found for this product.</div>
+                                )}
+                              </div>
+                              <div className="mb-4">
+                                <input type="file" multiple ref={fileInputRef} onChange={handleAddImages} />
+                              </div>
+                              <div className="flex justify-end">
+                                <button className="px-4 py-2 bg-primary text-primary-foreground rounded" onClick={() => setShowImageModal(false)}>Done</button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                   <span className="text-lg font-bold text-foreground">₹{product.price}</span>
                   {product.originalPrice > product.price && (
                     <span className="text-sm text-muted-foreground line-through">

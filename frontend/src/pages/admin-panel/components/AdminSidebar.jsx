@@ -17,6 +17,12 @@ const AdminSidebar = ({ activeSection, onSectionChange, isOpen, onClose }) => {
       description: 'Manage products'
     },
     {
+      id: 'update-product-image',
+      label: 'Update Product Image',
+      icon: Package, // You can replace with a more suitable icon if desired
+      description: 'Edit product images'
+    },
+    {
       id: 'users',
       label: 'Users',
       icon: Users,

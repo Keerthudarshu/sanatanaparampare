@@ -1,4 +1,4 @@
-package com.eduprajna.Controller;
+package com.eduprajna.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -144,5 +144,60 @@ public class ProductController {
                 .map(name -> "/api/admin/products/images/" + name)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(urls);
+    }
+    // Upload or update product image by id
+    @PostMapping(value = "/{id}/image", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> uploadProductImage(
+            @PathVariable Long id,
+            @RequestParam("image") MultipartFile imageFile
+    ) {
+        try {
+            Product product = productService.getById(id);
+            if (product == null) {
+                return ResponseEntity.status(404).body("Product not found");
+            }
+            if (imageFile != null && !imageFile.isEmpty()) {
+                // Delete old image if exists
+                if (product.getImageUrl() != null) {
+                    String oldFilename = storageService.extractFilenameFromUrl(product.getImageUrl());
+                    if (oldFilename != null) {
+                        storageService.delete(oldFilename);
+                    }
+                }
+                String relativePath = storageService.store(imageFile);
+                product.setImageUrl(relativePath);
+                productService.save(product);
+            }
+            return ResponseEntity.ok(product);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
+        }
+    }
+
+    // Delete product image by id
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<?> deleteProductImage(@PathVariable Long id) {
+        try {
+            Product product = productService.getById(id);
+            if (product == null) {
+                return ResponseEntity.status(404).body("Product not found");
+            }
+            if (product.getImageUrl() != null) {
+                String filename = storageService.extractFilenameFromUrl(product.getImageUrl());
+                if (filename != null) {
+                    boolean deleted = storageService.delete(filename);
+                    if (!deleted) {
+                        return ResponseEntity.status(500).body("Failed to delete image file: " + filename);
+                    }
+                    product.setImageUrl(null);
+                    productService.save(product);
+                }
+            }
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
+        }
     }
 }
