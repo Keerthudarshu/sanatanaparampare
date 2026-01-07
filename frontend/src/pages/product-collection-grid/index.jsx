@@ -50,6 +50,17 @@ const ProductCollectionGrid = () => {
     brands: []
   });
 
+  // Auto-apply category filter from URL
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam) {
+      setFilters(prev => ({
+        ...prev,
+        categories: [categoryParam]
+      }));
+    }
+  }, [searchParams]);
+
   // Initialize products and apply URL filters (category, search)
   useEffect(() => {
     const loadProducts = async () => {
@@ -153,17 +164,41 @@ const ProductCollectionGrid = () => {
     }
 
     if (filters?.categories?.length > 0) {
+      const categoryMap = {
+        '1': 'Wood Pressed Oils',
+        '2': 'Essential Oils',
+        '3': 'Ghee',
+        '4': 'Honey',
+        '5': 'Papads',
+        '6': 'Pickles',
+        '7': 'Spice Powders',
+        '8': 'Chemical Free Jaggery',
+        '9': 'Other Food Products'
+      };
       const beforeCategoryFilter = filtered.length;
       filtered = filtered?.filter(product => {
         return filters?.categories?.some(categoryFilter => {
-          const productCategory = String(product?.category || '').toLowerCase().trim();
           const filterCategory = categoryFilter.toLowerCase().trim();
-          
-          // Multiple matching strategies for robust filtering
-          return productCategory === filterCategory ||
-                 productCategory.replace(/\s+/g, '-') === filterCategory.replace(/\s+/g, '-') ||
-                 productCategory.includes(filterCategory) ||
-                 filterCategory.includes(productCategory);
+          // Try to match by name or by mapped ID
+          const mappedCategory = categoryMap[categoryFilter] ? categoryMap[categoryFilter].toLowerCase().trim() : null;
+          // Check product category fields
+          const productCategoryName = String(product?.category || '').toLowerCase().trim();
+          const productCategoryId = String(product?.categoryId || product?.category_id || '').toLowerCase().trim();
+          // Match by name or ID
+          return (
+            productCategoryName === filterCategory ||
+            productCategoryName.replace(/\s+/g, '-') === filterCategory.replace(/\s+/g, '-') ||
+            productCategoryName.includes(filterCategory) ||
+            filterCategory.includes(productCategoryName) ||
+            (mappedCategory && (
+              productCategoryName === mappedCategory ||
+              productCategoryName.replace(/\s+/g, '-') === mappedCategory.replace(/\s+/g, '-') ||
+              productCategoryName.includes(mappedCategory) ||
+              mappedCategory.includes(productCategoryName)
+            )) ||
+            productCategoryId === categoryFilter ||
+            productCategoryId === String(Object.keys(categoryMap).find(key => categoryMap[key].toLowerCase().trim() === filterCategory))
+          );
         });
       });
       console.log(`Category filter: ${beforeCategoryFilter} → ${filtered.length} products`);
@@ -320,7 +355,22 @@ const ProductCollectionGrid = () => {
     { label: 'Products', path: '/product-collection-grid' }
   ];
 
-  const categoryTitle = searchParams?.get('category')?.replace(/-/g, ' ')?.replace(/\b\w/g, l => l?.toUpperCase()) || 'All Products';
+  // Category mapping for display
+  const categoryMap = {
+    '1': { name: 'Wood Pressed Oils', badge: 'Best Seller' },
+    '2': { name: 'Essential Oils', badge: '' },
+    '3': { name: 'Ghee', badge: 'Premium' },
+    '4': { name: 'Honey', badge: '' },
+    '5': { name: 'Papads', badge: 'Handmade' },
+    '6': { name: 'Pickles', badge: 'Homemade' },
+    '7': { name: 'Spice Powders', badge: 'Authentic' },
+    '8': { name: 'Chemical Free Jaggery', badge: 'Natural' },
+    '9': { name: 'Other Food Products', badge: '' }
+  };
+
+  const categoryId = searchParams?.get('category');
+  const categoryTitle = categoryId && categoryMap[categoryId]?.name ? categoryMap[categoryId].name : (searchParams?.get('category')?.replace(/-/g, ' ')?.replace(/\b\w/g, l => l?.toUpperCase()) || 'All Products');
+  const categoryBadge = categoryId && categoryMap[categoryId]?.badge ? categoryMap[categoryId].badge : '';
   // Detect if woodpressed oils category is selected
   const isWoodPressedOils = (() => {
     const param = (searchParams?.get('category') || '').toLowerCase().replace(/\s+/g, '-');
@@ -346,9 +396,16 @@ const ProductCollectionGrid = () => {
 
         {/* Page Header */}
         <div className="mb-6">
-          <h1 className="font-heading font-bold text-3xl text-foreground mb-2">
-            {categoryTitle}
-          </h1>
+          <div className="flex items-center gap-4 mb-2">
+            <h1 className="font-heading font-bold text-3xl text-foreground">
+              {categoryTitle}
+            </h1>
+            {categoryBadge && (
+              <span className="bg-accent text-white px-4 py-2 rounded-full text-sm font-semibold shadow border border-accent/20">
+                {categoryBadge}
+              </span>
+            )}
+          </div>
           <p className="font-body text-muted-foreground">
             Discover our collection of natural, handmade products crafted with love and tradition.
           </p>

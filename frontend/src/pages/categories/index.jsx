@@ -10,184 +10,93 @@ import categoryApi from '../../services/categoryApi';
 import productApi from '../../services/productApi';
 
 const CategoriesPage = () => {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
+  // Use static categories data provided by user
+  const categories = [
+    {
+      id: 1,
+      name: 'Wood Pressed Oils',
+      productCount: 25,
+      image: '/assets/banner/Wood Pressed Oils.png',
+      icon: 'Droplets',
+      description: 'Cold pressed, chemical-free oils',
+      featured: ['Coconut Oil', 'Sesame Oil', 'Groundnut Oil'],
+      startingPrice: 180,
+      badge: 'Best Seller',
+      products: []
+    },
+    {
+      id: 7,
+      name: 'Spice Powders',
+      productCount: 42,
+      image: '/assets/banner/masala.png',
+      icon: 'Sparkles',
+      description: 'Traditional masalas & spice blends',
+      featured: ['Sambar Powder', 'Rasam Powder', 'Garam Masala'],
+      startingPrice: 85,
+      badge: 'Authentic',
+      products: []
+    },
+    {
+      id: 6,
+      name: 'Pickles',
+      productCount: 18,
+      image: '/assets/banner/pickles.png',
+      icon: 'Jar',
+      description: 'Homemade traditional pickles',
+      featured: ['Mango Pickle', 'Lemon Pickle', 'Mixed Veg'],
+      startingPrice: 120,
+      badge: 'Homemade',
+      products: []
+    },
+    {
+      id: 3,
+      name: 'Ghee',
+      productCount: 12,
+      image: '/assets/banner/ghee1.png',
+      icon: 'Heart',
+      description: 'Pure A2 ghee & wild honey',
+      featured: ['Pure Ghee', 'Wild Honey', 'A2 Cow Ghee'],
+      startingPrice: 450,
+      badge: 'Premium',
+      products: []
+    },
+    {
+      id: 8,
+      name: 'Chemical Free Jaggery',
+      productCount: 8,
+      image: '/assets/banner/Jaggery_Sweeteners.jpg',
+      icon: 'Candy',
+      description: 'Chemical-free natural sweeteners',
+      featured: ['Powder Jaggery', 'Solid Jaggery', 'Palm Jaggery'],
+      startingPrice: 95,
+      badge: 'Natural',
+      products: []
+    },
+    {
+      id: 5,
+      name: 'Papads',
+      productCount: 15,
+      image: '/assets/banner/papad.png',
+      icon: 'Cookie',
+      description: 'Handmade papads & traditional items',
+      featured: ['Rice Papad', 'Urad Papad', 'Ragi Items'],
+      startingPrice: 65,
+      badge: 'Handmade',
+      products: []
+    }
+  ];
+
+  const navigate = useNavigate();
   const breadcrumbItems = [
     { label: 'Home', path: '/homepage' },
     { label: 'Categories', path: '/categories' }
   ];
 
-  useEffect(() => {
-    fetchCategoriesWithImages();
-  }, []);
-
-  const fetchCategoriesWithImages = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Fetch categories from backend
-      const categoriesResponse = await categoryApi.getAll();
-      const categoriesData = categoriesResponse || [];
-
-      // Fetch products to get category images and counts
-      let productsData = [];
-      try {
-        const productsResponse = await productApi.getAll();
-        productsData = Array.isArray(productsResponse) ? productsResponse : (productsResponse?.data || []);
-      } catch (productError) {
-        console.warn('Failed to fetch products for category enrichment:', productError);
-      }
-
-      // Process categories and enrich with product information
-      const enrichedCategories = await Promise.all(categoriesData.map(async (category) => {
-        const categoryName = category.name || category.categoryName;
-        if (!categoryName) return null;
-
-        // Find products in this category
-        const categoryProducts = productsData.filter(product => {
-          const productCategory = product.category || product.categoryId;
-          return productCategory && productCategory.toLowerCase() === categoryName.toLowerCase();
-        });
-
-        // Get the first available product image for category, or a mapped fallback
-        const categoryImage = getCategoryImage(categoryProducts, categoryName);
-        
-        return {
-          id: category.id,
-          name: categoryName,
-          displayName: formatCategoryName(categoryName),
-          description: generateCategoryDescription(categoryName),
-          image: categoryImage,
-          productCount: categoryProducts.length,
-          products: categoryProducts.slice(0, 3), // Show first 3 products as preview
-          slug: categoryName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-        };
-      }));
-
-      // Debug: log all category slugs before filtering
-      console.log('All category slugs from backend:', enrichedCategories.map(cat => cat && cat.slug));
-
-      // Only allow specific categories to be shown
-      const allowedSlugs = [
-        'wood-pressed-oils',
-        'spice-powders',
-        'pickles',
-        'ghee-honey',
-        'papads',
-        'jaggery',
-        'jaggery-sweeteners'
-      ];
-      const validCategories = enrichedCategories
-        .filter(cat => cat !== null && allowedSlugs.includes(cat.slug))
-        .sort((a, b) => b.productCount - a.productCount);
-
-      setCategories(validCategories);
-    } catch (err) {
-      console.error('Error fetching categories:', err);
-      setError('Failed to load categories. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getCategoryImage = (products, categoryName) => {
-    // Try to find a good image from products
-    for (const product of products) {
-      const image = product.imageUrl || product.image || product.image_path || product.thumbnailUrl;
-      if (image && image !== '/assets/images/no_image.png') {
-        return image;
-      }
-    }
-
-    // Fallback images per category (external CDN/Unsplash) to ensure visuals
-    const key = (categoryName || '').toLowerCase().replace(/\s+/g, '-');
-    const fallbackImages = {
-      'wood-pressed-oils': 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&h=350&fit=crop&auto=format&q=85',
-      'spice-powders': 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&h=350&fit=crop&auto=format&q=85',
-      'pickles': 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=500&h=350&fit=crop&auto=format&q=85',
-      'ghee-honey': '/assets/banner/gee3.avif',
-      'jaggery': '/assets/banner/Jaggery_Sweeteners.jpg',
-      'papads': 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500&h=350&fit=crop&auto=format&q=85'
-    };
-
-    if (fallbackImages[key]) return fallbackImages[key];
-
-    // Generic default image
-    return 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d';
-  };
-
-  const formatCategoryName = (name) => {
-    return name
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-  };
-
-  const generateCategoryDescription = (categoryName) => {
-    const descriptions = {
-      'wood-pressed-oils': 'Pure, traditional wood-pressed oils extracted using ancient methods',
-      'spice-powders': 'Authentic spice blends and powders ground fresh using traditional techniques',
-      'pickles': 'Homemade pickles and preserves using traditional family recipes',
-      'ghee-honey': 'Pure A2 ghee and wild honey sourced directly from farms',
-      'jaggery': 'Chemical-free natural jaggery made using traditional methods',
-      'papads': 'Hand-rolled papads and traditional snacks made with care'
-    };
-
-    const key = categoryName.toLowerCase().replace(/\s+/g, '-');
-    return descriptions[key] || `Discover our premium ${formatCategoryName(categoryName).toLowerCase()} collection`;
-  };
-
   const handleCategoryClick = (category) => {
-    navigate(`/product-collection-grid?category=${encodeURIComponent(category.name)}`);
+    navigate(`/product-collection-grid?category=${category.id}`);
   };
 
-  const handleRetry = () => {
-    fetchCategoriesWithImages();
-  };
-
-  if (loading) {
-    return (
-      <>
-        <Helmet>
-          <title>Categories - Sanatana Parampare | Browse Product Categories</title>
-        </Helmet>
-        <div className="min-h-screen bg-background">
-          <Header />
-          <main className="pt-6">
-            <div className="container mx-auto px-4">
-              <Breadcrumb customItems={breadcrumbItems} />
-              <CategoryLoadingSkeleton />
-            </div>
-          </main>
-          <Footer />
-        </div>
-      </>
-    );
-  }
-
-  if (error) {
-    return (
-      <>
-        <Helmet>
-          <title>Categories - Sanatana Parampare | Browse Product Categories</title>
-        </Helmet>
-        <div className="min-h-screen bg-background">
-          <Header />
-          <main className="pt-6">
-            <div className="container mx-auto px-4">
-              <Breadcrumb customItems={breadcrumbItems} />
-              <CategoryError error={error} onRetry={handleRetry} />
-            </div>
-          </main>
-          <Footer />
-        </div>
-      </>
-    );
-  }
 
   return (
     <>
@@ -305,7 +214,7 @@ const CategoryCard = ({ category, onClick }) => (
       </p>
 
       {/* Product Preview */}
-      {category.products.length > 0 && (
+      {Array.isArray(category.products) && category.products.length > 0 && (
         <div className="mb-4">
           <p className="font-heading text-sm font-semibold text-foreground mb-2">
             Featured Products:

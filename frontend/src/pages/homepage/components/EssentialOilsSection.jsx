@@ -1,14 +1,14 @@
 import React from 'react';
 
 const essentialOils = [
-  { name: 'Castor Oil', img: '/assets/images/esential oils/Castor oil Bottle.png' },
-  { name: 'Dry Coconut Oil', img: '/assets/images/esential oils/Dry coconut oil Bottle.png' },
-  { name: 'Groundnut Oil', img: '/assets/images/esential oils/Ground nut oil bottle.png' },
-  { name: 'Mustard Oil', img: '/assets/images/esential oils/Mustard oil bottle.png' },
-  { name: 'Niger Oil', img: '/assets/images/esential oils/Niger oil Bottle.png' },
-  { name: 'Saflower Oil', img: '/assets/images/esential oils/Saflower oil Bottle.png' },
-  { name: 'Sesame Oil', img: '/assets/images/esential oils/Sesame oil bottle.png' },
-  { name: 'Virgin Coconut Oil', img: '/assets/images/esential oils/V Coconut oil Bottle.png' },
+  { id: 18, name: 'Saflower Oil', img: '/assets/images/esential oils/Saflower oil Bottle.png' },
+  { id: 19, name: 'Sesame Oil', img: '/assets/images/esential oils/Sesame oil bottle.png' },
+  { id: 20, name: 'Flax Seed Oil', img: '/assets/images/esential oils/Flax seed oil bottle.png' },
+  { id: 21, name: 'Niger Oil', img: '/assets/images/esential oils/Niger oil Bottle.png' },
+  { id: 22, name: 'Virgin Coconut Oil', img: '/assets/images/esential oils/V Coconut oil Bottle.png' },
+  { id: 23, name: 'Mustard Oil', img: '/assets/images/esential oils/Mustard oil bottle.png' },
+  { id: 38, name: 'Dry Coconut Oil', img: '/assets/images/esential oils/Dry coconut oil Bottle.png' },
+  { id: 39, name: 'Groundnut Oil', img: '/assets/images/esential oils/Ground nut oil bottle.png' },
 ];
 
 const EssentialOilsSection = () => (
@@ -24,7 +24,12 @@ const EssentialOilsSection = () => (
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8">
         {essentialOils.map((oil, idx) => (
-          <div key={idx} className="flex flex-col bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+          <a
+            key={oil.id}
+            href={`/product-detail-page/${oil.id}`}
+            className="flex flex-col bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer"
+            style={{ textDecoration: 'none' }}
+          >
             <div className="flex-1 w-full aspect-[4/5] bg-gray-100 flex items-center justify-center">
               <img
                 src={oil.img}
@@ -38,7 +43,7 @@ const EssentialOilsSection = () => (
                 {oil.name}
               </span>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </div>

@@ -8,10 +8,10 @@ const ShopByCategorySection = () => {
 
   const categories = [
     {
-      id: 'wood-pressed-oils',
+      id: 1,
       name: 'Wood Pressed Oils',
       productCount: 25,
-      image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&h=350&fit=crop&auto=format&q=85',
+      image: ['/assets/banner/Wood Pressed Oils.png'],
       icon: 'Droplets',
       description: 'Cold pressed, chemical-free oils',
       featured: ['Coconut Oil', 'Sesame Oil', 'Groundnut Oil'],
@@ -19,10 +19,10 @@ const ShopByCategorySection = () => {
       badge: 'Best Seller'
     },
     {
-      id: 'spice-powders',
+      id: 7,
       name: 'Spice Powders',
       productCount: 42,
-      image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&h=350&fit=crop&auto=format&q=85',
+      image: ['/assets/banner/masala.png'],
       icon: 'Sparkles',
       description: 'Traditional masalas & spice blends',
       featured: ['Sambar Powder', 'Rasam Powder', 'Garam Masala'],
@@ -30,10 +30,10 @@ const ShopByCategorySection = () => {
       badge: 'Authentic'
     },
     {
-      id: 'pickles-preserves',
-      name: 'Pickles & Preserves',
+      id: 6,
+      name: 'Pickles',
       productCount: 18,
-      image: 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=500&h=350&fit=crop&auto=format&q=85',
+      image:['/assets/banner/pickles.png'],
       icon: 'Jar',
       description: 'Homemade traditional pickles',
       featured: ['Mango Pickle', 'Lemon Pickle', 'Mixed Veg'],
@@ -41,10 +41,12 @@ const ShopByCategorySection = () => {
       badge: 'Homemade'
     },
     {
-      id: 'ghee-honey',
-      name: 'Ghee & Honey',
+      id: 3,
+      name: 'Ghee',
       productCount: 12,
-        image: '/assets/banner/gee3.avif',
+      image: [
+        '/assets/banner/ghee1.png'
+      ],
       icon: 'Heart',
       description: 'Pure A2 ghee & wild honey',
       featured: ['Pure Ghee', 'Wild Honey', 'A2 Cow Ghee'],
@@ -52,10 +54,10 @@ const ShopByCategorySection = () => {
       badge: 'Premium'
     },
     {
-      id: 'jaggery-sweeteners',
-      name: 'Jaggery & Sweeteners',
+      id: 8,
+      name: 'Chemical Free Jaggery',
       productCount: 8,
-      image: '/assets/banner/Jaggery_Sweeteners.jpg',
+      image: ['/assets/banner/Jaggery_Sweeteners.jpg'],
       icon: 'Candy',
       description: 'Chemical-free natural sweeteners',
       featured: ['Powder Jaggery', 'Solid Jaggery', 'Palm Jaggery'],
@@ -63,10 +65,10 @@ const ShopByCategorySection = () => {
       badge: 'Natural'
     },
     {
-      id: 'papads-traditional',
-      name: 'Papads & More',
+      id: 5,
+      name: 'Papads',
       productCount: 15,
-      image: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500&h=350&fit=crop&auto=format&q=85',
+      image: ['/assets/banner/papad.png'],
       icon: 'Cookie',
       description: 'Handmade papads & traditional items',
       featured: ['Rice Papad', 'Urad Papad', 'Ragi Items'],
@@ -196,21 +198,7 @@ const ShopByCategorySection = () => {
                   </div>
                 </div>
 
-                {/* Demo Buttons for Add to Cart/Wishlist */}
-                <div className="flex gap-2 mt-4">
-                  <button
-                    className="px-3 py-1 bg-primary text-white rounded hover:bg-primary/80"
-                    onClick={(e) => { e.preventDefault(); handleAddToCart(category.name); }}
-                  >
-                    Add to Cart
-                  </button>
-                  <button
-                    className="px-3 py-1 bg-accent text-white rounded hover:bg-accent/80"
-                    onClick={(e) => { e.preventDefault(); handleAddToWishlist(category.name); }}
-                  >
-                    Add to Wishlist
-                  </button>
-                </div>
+                  {/* Removed Add to Cart and Add to Wishlist buttons as requested */}
               </div>
             </Link>
           ))}

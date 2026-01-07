@@ -20,23 +20,21 @@ const BannerShowcase = () => {
       images: [
         '/assets/banner/ghee1.png'
       ],
-      link: "/product-collection-grid?category=ghee",
+      link: "/product-collection-grid?category=3",
       badge: "Premium Quality"
     },
     {
       title: "Traditional Spices",
       description: "Hand-ground masalas and spice powders",
       images: ['/assets/banner/masala.png'],
-      link: "/product-collection-grid?category=spices",
+      link: "/product-collection-grid?category=7",
       badge: "Fresh Ground"
     },
     {
       title: "Homemade Pickles",
       description: "Authentic traditional pickle varieties",
-      images: [
-        '/assets/banner/pickles.png'
-      ],
-      link: "/product-collection-grid?category=pickles",
+      images: ['/assets/banner/pickles.png'],
+      link: "/product-collection-grid?category=6",
       badge: "Homemade"
     }
   ];

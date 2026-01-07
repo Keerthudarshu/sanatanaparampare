@@ -124,7 +124,7 @@ const Header = ({ isLoggedIn = false, onSearch = () => {} }) => {
             <Link to="/homepage" className="flex items-center group">
               <div className="relative w-14 h-14 flex items-center justify-center overflow-visible">
                 <img
-                  src="/assets/images/logo.jpg"
+                  src="/assets/images/logo.png"
                   alt="Sanatana Parampare Logo"
                   className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-14 max-h-none transform scale-125 group-hover:scale-150 transition-transform duration-300 pointer-events-none"
                 />
