@@ -18,9 +18,7 @@ const BannerShowcase = () => {
       title: "Premium Ghee Collection",
       description: "Pure A2 cow ghee and traditional ghee varieties",
       images: [
-        '/assets/banner/gee1.jpeg',
-        '/assets/banner/gee2.png',
-        '/assets/banner/gee3.avif'
+        '/assets/banner/ghee1.png'
       ],
       link: "/product-collection-grid?category=ghee",
       badge: "Premium Quality"
@@ -28,7 +26,7 @@ const BannerShowcase = () => {
     {
       title: "Traditional Spices",
       description: "Hand-ground masalas and spice powders",
-      images: ['/assets/banner/masala.jpg'],
+      images: ['/assets/banner/masala.png'],
       link: "/product-collection-grid?category=spices",
       badge: "Fresh Ground"
     },
@@ -36,9 +34,7 @@ const BannerShowcase = () => {
       title: "Homemade Pickles",
       description: "Authentic traditional pickle varieties",
       images: [
-        '/assets/banner/pickles.jpeg',
-        '/assets/banner/pickles1.webp',
-        '/assets/banner/pickels2.webp'
+        '/assets/banner/pickles.png'
       ],
       link: "/product-collection-grid?category=pickles",
       badge: "Homemade"
