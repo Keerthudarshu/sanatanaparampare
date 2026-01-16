@@ -31,7 +31,8 @@ export const AuthProvider = ({ children, setError }) => {
   const signIn = async (email, password) => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:8080/api/auth/login', {
+      const API_BASE = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

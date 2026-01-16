@@ -77,7 +77,8 @@ const CheckoutProcess = () => {
   const addTestItems = async () => {
     try {
       // First, try to get existing products from the backend
-      const response = await fetch('http://localhost:8080/api/admin/products');
+      const API_BASE = import.meta.env.VITE_API_URL;
+      const response = await fetch(`${API_BASE}/api/admin/products`);
       let availableProducts = [];
 
       if (response.ok) {
@@ -115,7 +116,7 @@ const CheckoutProcess = () => {
         // Add products to backend
         for (const product of testProducts) {
           try {
-            const createResponse = await fetch('http://localhost:8080/api/admin/products', {
+            const createResponse = await fetch(`${API_BASE}/api/admin/products`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

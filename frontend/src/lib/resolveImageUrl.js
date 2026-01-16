@@ -9,7 +9,8 @@
  * - Idempotent: calling multiple times produces same result
  */
 
-const API_ORIGIN = 'http://localhost:8080/api';
+const API_BASE = import.meta.env?.VITE_API_URL || 'http://localhost:8080';
+const API_ORIGIN = `${API_BASE}/api`;
 
 export function resolveImageUrl(input) {
   // Handle null, undefined, or empty strings
@@ -67,12 +68,12 @@ export function resolveImageUrl(input) {
   
   // Already has /api prefix but not full origin
   if (url.startsWith('/api/')) {
-    return `http://localhost:8080${url}`;
+    return `${API_BASE}${url}`;
   }
 
-  // /uploads/ paths - map to http://localhost:8080
+  // /uploads/ paths - map to API_BASE
   if (url.startsWith('/uploads/')) {
-    return `http://localhost:8080${url}`;
+    return `${API_BASE}${url}`;
   }
 
   // Already has /admin or other prefixes
@@ -82,7 +83,7 @@ export function resolveImageUrl(input) {
 
   // Starts with / but not recognized
   if (url.startsWith('/')) {
-    return `http://localhost:8080${url}`;
+    return `${API_BASE}${url}`;
   }
 
   // Relative path - add to /api prefix

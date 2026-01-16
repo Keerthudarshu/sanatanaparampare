@@ -74,7 +74,8 @@ const UserAuth = () => {
         }
       } else {
         // Registration logic (call /api/auth/register)
-        const res = await fetch('http://localhost:8080/api/auth/register', {
+        const API_BASE = import.meta.env.VITE_API_URL;
+        const res = await fetch(`${API_BASE}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

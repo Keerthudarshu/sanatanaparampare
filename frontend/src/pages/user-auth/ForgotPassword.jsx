@@ -16,7 +16,8 @@ export default function ForgotPassword() {
   const [error, setError] = useState('');
   const [method, setMethod] = useState('reset'); // 'reset' or 'credentials'
 
-  const API_URL = 'http://localhost:8080/api/password';
+  const API_BASE = import.meta.env.VITE_API_URL;
+  const API_URL = `${API_BASE}/api/password`;
 
   // Step 1: Request password reset
   const handleForgotPassword = async (e) => {

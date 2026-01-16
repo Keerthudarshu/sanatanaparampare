@@ -99,7 +99,8 @@ const dataService = {
 
   async getAllUsers() {
     try {
-      const res = await fetch('http://localhost:8080/api/admin/users');
+      const API_BASE = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${API_BASE}/api/admin/users`);
       if (!res.ok) throw new Error('Failed to fetch users');
       return await res.json();
     } catch (error) {

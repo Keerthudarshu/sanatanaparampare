@@ -14,7 +14,8 @@ const InquiryManagement = () => {
 
     const fetchInquiries = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/contact/all');
+            const API_BASE = import.meta.env.VITE_API_URL;
+            const response = await fetch(`${API_BASE}/api/contact/all`);
             if (response.ok) {
                 const data = await response.json();
                 // Sort by date descending
@@ -38,7 +39,7 @@ const InquiryManagement = () => {
         try {
             // Process marks sequentially to ensure database consistency
             for (const id of ids) {
-                await fetch(`http://localhost:8080/api/contact/mark-viewed/${id}`, {
+                await fetch(`${API_BASE}/api/contact/mark-viewed/${id}`, {
                     method: 'POST'
                 });
             }

@@ -80,7 +80,8 @@ const ContactPage = () => {
 
     try {
       // 1. Save to database via Java backend
-      const dbResponse = await fetch('http://localhost:8080/api/contact/submit', {
+      const API_BASE = import.meta.env.VITE_API_URL;
+      const dbResponse = await fetch(`${API_BASE}/api/contact/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

@@ -8,7 +8,8 @@ const AdminSidebar = ({ activeSection, onSectionChange, isOpen, onClose }) => {
   React.useEffect(() => {
     const fetchInquiryCount = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/contact/unread-count');
+        const API_BASE = import.meta.env.VITE_API_URL;
+        const response = await fetch(`${API_BASE}/api/contact/unread-count`);
         if (response.ok) {
           const count = await response.json();
           setInquiryCount(count);
