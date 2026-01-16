@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Base URL from environment variables (Vite uses import.meta.env)
 // Default to include `/api` for existing calls that use paths like `/products`
-const baseURL = import.meta.env?.VITE_API_BASE_URL || 'http://13.49.18.69:8080/api';
+const baseURL = (import.meta.env?.VITE_API_URL || 'http://13.49.18.69:8080') + '/api';
 
 export const apiClient = axios.create({
   baseURL,
