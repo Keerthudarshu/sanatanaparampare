@@ -31,10 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/api/**")
                 .allowedOrigins(
-                    "http://localhost:3000", 
-                    "http://127.0.0.1:3000",
-                    "https://*.onrender.com",
-                    "https://your-app-name.onrender.com"
+                    "https://sanatanaparampare.vercel.app"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
