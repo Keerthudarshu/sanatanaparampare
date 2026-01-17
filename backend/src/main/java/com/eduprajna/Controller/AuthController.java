@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eduprajna.entity.User;
 import com.eduprajna.service.UserService;
 
+import org.springframework.web.bind.annotation.RequestMethod;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = { "https://sanatanaparampare.vercel.app", "http://localhost:3000",
@@ -29,6 +31,11 @@ public class AuthController {
     public AuthController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> handleOptions() {
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
