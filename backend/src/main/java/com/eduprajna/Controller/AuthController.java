@@ -18,12 +18,14 @@ import com.eduprajna.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:3000"}, allowCredentials = "true")
+@CrossOrigin(origins = { "https://sanatanaparampare.vercel.app", "http://localhost:3000",
+        "http://127.0.0.1:3000" }, allowCredentials = "true")
 public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
-    
+
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+
     public AuthController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
@@ -33,15 +35,15 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
         try {
             logger.debug("Login attempt for email: {}", body.get("email"));
-            
+
             String email = body.get("email");
             String password = body.get("password");
-            
+
             if (email == null || password == null) {
                 logger.warn("Missing email or password in login request");
                 return ResponseEntity.badRequest().body("Email and password are required");
             }
-            
+
             Optional<User> userOpt = userService.findByEmail(email);
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
@@ -65,11 +67,10 @@ public class AuthController {
                 if (isMatch) {
                     logger.info("Successful login for user: {}", email);
                     return ResponseEntity.ok(Map.of(
-                        "id", user.getId(),
-                        "name", user.getName(),
-                        "email", user.getEmail(),
-                        "role", user.getRole()
-                    ));
+                            "id", user.getId(),
+                            "name", user.getName(),
+                            "email", user.getEmail(),
+                            "role", user.getRole()));
                 }
             }
             logger.warn("Invalid credentials for email: {}", email);
@@ -79,12 +80,12 @@ public class AuthController {
             return ResponseEntity.status(500).body("Internal server error during login");
         }
     }
-    
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> body) {
         try {
             logger.debug("Registration attempt for email: {}", body.get("email"));
-            
+
             String name = body.get("name");
             String email = body.get("email");
             String password = body.get("password");
@@ -108,14 +109,13 @@ public class AuthController {
             user.setPasswordHash(passwordEncoder.encode(password));
             user.setPhone(phone);
             user.setRole(role);
-            
+
             User savedUser = userService.save(user);
             logger.info("User registered successfully: {}", email);
-            
+
             return ResponseEntity.ok(Map.of(
-                "message", "User registered successfully",
-                "userId", savedUser.getId()
-            ));
+                    "message", "User registered successfully",
+                    "userId", savedUser.getId()));
         } catch (Exception e) {
             logger.error("Error during registration for email: {}", body.get("email"), e);
             return ResponseEntity.status(500).body("Internal server error during registration");

@@ -7,7 +7,7 @@
 // Supported prefixes are defined in vite.config.mjs (VITE_ and REACT_APP_)
 const API_BASE = import.meta.env.VITE_API_URL ||
     import.meta.env.REACT_APP_API_URL ||
-    'http://13.49.18.69:8080';
+    (import.meta.env.MODE === 'production' ? '' : 'http://13.49.18.69:8080');
 
 // Ensure there is no trailing slash in the API_BASE
 const cleanApiBase = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
