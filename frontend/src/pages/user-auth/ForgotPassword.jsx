@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { API_CONFIG } from '../../config/apiConfig';
 import './ForgotPassword.css';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const resetToken = searchParams.get('token');
-  
+
   const [step, setStep] = useState(resetToken ? 2 : 1); // Step 1: Request reset, Step 2: Reset password, Step 3: Send credentials
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -16,8 +17,7 @@ export default function ForgotPassword() {
   const [error, setError] = useState('');
   const [method, setMethod] = useState('reset'); // 'reset' or 'credentials'
 
-  const API_BASE = import.meta.env.VITE_API_URL;
-  const API_URL = `${API_BASE}/api/password`;
+  const API_URL = `${API_CONFIG.BASE_URL}/api/password`;
 
   // Step 1: Request password reset
   const handleForgotPassword = async (e) => {
@@ -144,7 +144,7 @@ export default function ForgotPassword() {
     <div className="forgot-password-container">
       <div className="forgot-password-card">
         <h2>Password Recovery</h2>
-        
+
         {/* Method Selection */}
         {!resetToken && step === 1 && (
           <div className="method-selection">

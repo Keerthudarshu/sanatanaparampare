@@ -17,6 +17,7 @@ import OrderSummary from './components/OrderSummary';
 import TrustSignals from './components/TrustSignals';
 import Button from '../../components/ui/Button';
 import Icon from '../../components/AppIcon';
+import { API_CONFIG } from '../../config/apiConfig';
 
 /**
  * Multi-Step Checkout Process Component
@@ -76,8 +77,8 @@ const CheckoutProcess = () => {
   // Add test items to cart for testing purposes
   const addTestItems = async () => {
     try {
-      // First, try to get existing products from the backend
-      const API_BASE = import.meta.env.VITE_API_URL;
+      // 1. Forward to get existing products from the backend
+      const API_BASE = API_CONFIG.BASE_URL;
       const response = await fetch(`${API_BASE}/api/admin/products`);
       let availableProducts = [];
 

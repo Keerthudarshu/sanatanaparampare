@@ -7,6 +7,7 @@ import Breadcrumb from '../../components/ui/Breadcrumb';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Icon from '../../components/AppIcon';
+import { API_CONFIG } from '../../config/apiConfig';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -80,7 +81,7 @@ const ContactPage = () => {
 
     try {
       // 1. Save to database via Java backend
-      const API_BASE = import.meta.env.VITE_API_URL;
+      const API_BASE = API_CONFIG.BASE_URL;
       const dbResponse = await fetch(`${API_BASE}/api/contact/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

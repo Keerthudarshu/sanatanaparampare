@@ -7,6 +7,7 @@ import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Icon from '../../components/AppIcon';
 import dataService from '../../services/dataService';
+import { API_CONFIG } from '../../config/apiConfig';
 
 const UserAuth = () => {
   const navigate = useNavigate();
@@ -74,7 +75,7 @@ const UserAuth = () => {
         }
       } else {
         // Registration logic (call /api/auth/register)
-        const API_BASE = import.meta.env.VITE_API_URL;
+        const API_BASE = API_CONFIG.BASE_URL;
         const res = await fetch(`${API_BASE}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

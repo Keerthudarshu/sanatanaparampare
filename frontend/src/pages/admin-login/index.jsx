@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_CONFIG } from '../../config/apiConfig';
 
 const AdminLogin = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -17,7 +18,7 @@ const AdminLogin = () => {
     setError('');
   };
 
-  const API_BASE = import.meta.env.VITE_API_URL;
+  const API_BASE = API_CONFIG.BASE_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -78,7 +79,7 @@ const AdminLogin = () => {
                   onClick={() => setShowPassword((s) => !s)}
                   className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center"
                 >
-                  {showPassword ? <><EyeOff size={14} className="mr-1"/> Hide</> : <><Eye size={14} className="mr-1"/> Show</>}
+                  {showPassword ? <><EyeOff size={14} className="mr-1" /> Hide</> : <><Eye size={14} className="mr-1" /> Show</>}
                 </button>
               </div>
               <Input

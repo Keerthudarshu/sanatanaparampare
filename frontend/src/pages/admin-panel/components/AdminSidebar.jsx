@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { X, LayoutDashboard, Package, Users, ShoppingCart, Settings, MessageSquare } from 'lucide-react';
+import { API_CONFIG } from '../../../config/apiConfig';
 
 const AdminSidebar = ({ activeSection, onSectionChange, isOpen, onClose }) => {
   const [inquiryCount, setInquiryCount] = React.useState(0);
@@ -8,7 +9,7 @@ const AdminSidebar = ({ activeSection, onSectionChange, isOpen, onClose }) => {
   React.useEffect(() => {
     const fetchInquiryCount = async () => {
       try {
-        const API_BASE = import.meta.env.VITE_API_URL;
+        const API_BASE = API_CONFIG.BASE_URL;
         const response = await fetch(`${API_BASE}/api/contact/unread-count`);
         if (response.ok) {
           const count = await response.json();

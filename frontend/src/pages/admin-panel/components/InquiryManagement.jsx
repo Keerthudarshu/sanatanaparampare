@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, User, Calendar, MessageSquare, Search, Filter, Trash2 } from 'lucide-react';
 import Icon from '../../../components/AppIcon';
+import { API_CONFIG } from '../../../config/apiConfig';
 
 const InquiryManagement = () => {
     const [inquiries, setInquiries] = useState([]);
@@ -14,7 +15,7 @@ const InquiryManagement = () => {
 
     const fetchInquiries = async () => {
         try {
-            const API_BASE = import.meta.env.VITE_API_URL;
+            const API_BASE = API_CONFIG.BASE_URL;
             const response = await fetch(`${API_BASE}/api/contact/all`);
             if (response.ok) {
                 const data = await response.json();
@@ -38,6 +39,7 @@ const InquiryManagement = () => {
     const markMultipleAsViewed = async (ids) => {
         try {
             // Process marks sequentially to ensure database consistency
+            const API_BASE = API_CONFIG.BASE_URL;
             for (const id of ids) {
                 await fetch(`${API_BASE}/api/contact/mark-viewed/${id}`, {
                     method: 'POST'
