@@ -92,7 +92,7 @@ const ContactPage = () => {
 
       // 2. Send thank you email via Node.js email service
       try {
-        await fetch('http://localhost:5001/api/send-contact-thankyou', {
+        await fetch('http://56.228.81.193:8080/api/send-contact-thankyou', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

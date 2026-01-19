@@ -307,7 +307,7 @@ const CheckoutProcess = () => {
             itemsCount: cartItems.length
           });
 
-          await fetch('http://localhost:5001/api/send-confirmation', {
+          await fetch('http://56.228.81.193:8080/api/send-confirmation', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -392,7 +392,7 @@ const CheckoutProcess = () => {
               console.log('DEBUG: verifyResult for Online:', verifyResult);
               console.log('DEBUG: savedOrder for Online:', savedOrder);
 
-              await fetch('http://localhost:5001/api/send-confirmation', {
+              await fetch('http://56.228.81.193:8080/api/send-confirmation', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

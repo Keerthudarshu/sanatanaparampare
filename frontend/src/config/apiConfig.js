@@ -13,7 +13,7 @@ const API_BASE = import.meta.env.VITE_API_URL ||
 const cleanApiBase = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
 
 export const API_CONFIG = {
-    BASE_URL: cleanApiBase,
+    BASE_URL: "http://56.228.81.193:8080",
     API_URL: `${cleanApiBase}/api`,
     TIMEOUT: 20000,
 };

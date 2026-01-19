@@ -9,7 +9,7 @@
  * - Idempotent: calling multiple times produces same result
  */
 
-const API_BASE = import.meta.env?.VITE_API_URL || 'http://localhost:8080';
+const API_BASE = import.meta.env?.VITE_API_URL || 'http://56.228.81.193:8080';
 const API_ORIGIN = `${API_BASE}/api`;
 
 export function resolveImageUrl(input) {

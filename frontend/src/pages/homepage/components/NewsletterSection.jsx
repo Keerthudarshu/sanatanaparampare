@@ -15,7 +15,7 @@ const NewsletterSection = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5001/api/send-subscription-confirmation', {
+      const response = await fetch('http://56.228.81.193:8080/api/send-subscription-confirmation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

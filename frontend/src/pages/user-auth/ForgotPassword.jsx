@@ -17,7 +17,7 @@ export default function ForgotPassword() {
   const [error, setError] = useState('');
   const [method, setMethod] = useState('reset'); // 'reset' or 'credentials'
 
-  const API_URL = `${API_CONFIG.BASE_URL}/api/password`;
+  const API_URL = `http://56.228.81.193:8080/api/password`;
 
   // Step 1: Request password reset
   const handleForgotPassword = async (e) => {

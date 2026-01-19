@@ -101,7 +101,7 @@ const dataService = {
   async getAllUsers() {
     try {
       const API_BASE = API_CONFIG.BASE_URL;
-      const res = await fetch(`${API_BASE}/api/admin/users`);
+      const res = await fetch(`http://56.228.81.193:8080/api/admin/users`);
       if (!res.ok) throw new Error('Failed to fetch users');
       return await res.json();
     } catch (error) {
