@@ -17,7 +17,7 @@ import OrderSummary from './components/OrderSummary';
 import TrustSignals from './components/TrustSignals';
 import Button from '../../components/ui/Button';
 import Icon from '../../components/AppIcon';
-import { API_CONFIG } from '../../config/apiConfig';
+import BASE_URL from '../../config/apiConfig';
 
 /**
  * Multi-Step Checkout Process Component
@@ -78,8 +78,7 @@ const CheckoutProcess = () => {
   const addTestItems = async () => {
     try {
       // 1. Forward to get existing products from the backend
-      const API_BASE = API_CONFIG.BASE_URL;
-      const response = await fetch(`${API_BASE}/api/admin/products`);
+      const response = await fetch(`${BASE_URL}/admin/products`);
       let availableProducts = [];
 
       if (response.ok) {
@@ -117,7 +116,7 @@ const CheckoutProcess = () => {
         // Add products to backend
         for (const product of testProducts) {
           try {
-            const createResponse = await fetch(`${API_BASE}/api/admin/products`, {
+            const createResponse = await fetch(`${BASE_URL}/admin/products`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -307,7 +306,7 @@ const CheckoutProcess = () => {
             itemsCount: cartItems.length
           });
 
-          await fetch('http://56.228.81.193:8080/api/send-confirmation', {
+          await fetch(`${BASE_URL}/send-confirmation`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -392,7 +391,7 @@ const CheckoutProcess = () => {
               console.log('DEBUG: verifyResult for Online:', verifyResult);
               console.log('DEBUG: savedOrder for Online:', savedOrder);
 
-              await fetch('http://56.228.81.193:8080/api/send-confirmation', {
+              await fetch(`${BASE_URL}/send-confirmation`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

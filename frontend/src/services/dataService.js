@@ -2,7 +2,7 @@
 import databaseData from '../data/database.json';
 import productApi from './productApi';
 import apiClient from './api';
-import { API_CONFIG } from '../config/apiConfig';
+import BASE_URL from '../config/apiConfig';
 
 // Simulate API delay for development
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -100,8 +100,7 @@ const dataService = {
 
   async getAllUsers() {
     try {
-      const API_BASE = API_CONFIG.BASE_URL;
-      const res = await fetch(`http://56.228.81.193:8080/api/admin/users`);
+      const res = await fetch(`${BASE_URL}/admin/users`);
       if (!res.ok) throw new Error('Failed to fetch users');
       return await res.json();
     } catch (error) {

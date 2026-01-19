@@ -12,10 +12,5 @@ const API_BASE = import.meta.env.VITE_API_URL ||
 // Ensure there is no trailing slash in the API_BASE
 const cleanApiBase = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
 
-export const API_CONFIG = {
-    BASE_URL: "http://56.228.81.193:8080",
-    API_URL: `${cleanApiBase}/api`,
-    TIMEOUT: 20000,
-};
-
-export default API_CONFIG;
+const BASE_URL = "http://56.228.81.193:8080/api";
+export default BASE_URL;
