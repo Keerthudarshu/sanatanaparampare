@@ -33,7 +33,7 @@ export const AuthProvider = ({ children, setError }) => {
     try {
       setLoading(true);
       const API_BASE = API_CONFIG.BASE_URL;
-      const res = await fetch(`${API_BASE}/api/auth/login`, {
+      const res = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

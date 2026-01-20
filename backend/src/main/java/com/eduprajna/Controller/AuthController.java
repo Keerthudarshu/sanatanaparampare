@@ -19,7 +19,7 @@ import com.eduprajna.service.UserService;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @CrossOrigin(origins = { "https://sanatanaparampare.vercel.app", "http://localhost:3000",
         "http://127.0.0.1:3000" }, allowCredentials = "true")
 public class AuthController {

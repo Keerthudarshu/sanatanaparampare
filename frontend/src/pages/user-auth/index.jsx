@@ -74,9 +74,9 @@ const UserAuth = () => {
           setError('You are not authorized as a user.');
         }
       } else {
-        // Registration logic (call /api/auth/register)
+        // Registration logic (call /auth/register)
         const API_BASE = API_CONFIG.BASE_URL;
-        const res = await fetch(`${API_BASE}/api/auth/register`, {
+        const res = await fetch(`${API_BASE}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
