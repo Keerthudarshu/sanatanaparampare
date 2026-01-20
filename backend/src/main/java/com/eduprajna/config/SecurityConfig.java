@@ -44,9 +44,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
 
@@ -57,10 +57,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(
-                "https://sanatanaparampare.vercel.app",
-                "http://localhost:3000",
-                "http://127.0.0.1:3000"));
+       config.setAllowedOrigins(List.of(
+        "http://56.228.81.193",
+        "https://sanatanaparampare.vercel.app",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"));
         config.setAllowedMethods(List.of(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of(
