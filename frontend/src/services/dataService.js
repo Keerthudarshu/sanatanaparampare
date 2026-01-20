@@ -2,11 +2,10 @@
 import databaseData from '../data/database.json';
 import productApi from './productApi';
 import apiClient from './api';
-import BASE_URL from '../config/apiConfig';
-
+import { API_CONFIG } from '../config/apiConfig';
 // Simulate API delay for development
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+const BASE_URL = API_CONFIG.BASE_URL;
 // Initialize empty users array since we removed hardcoded users
 let users = [];
 
